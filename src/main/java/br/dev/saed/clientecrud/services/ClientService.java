@@ -50,6 +50,15 @@ public class ClientService {
         }
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void delete(Long id) {
+        if(!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Id não encontrado: " + id);
+        }
+        repository.deleteById(id);
+        // Como não há outras tabelas, não deve ter erro de integridade referencial.
+    }
+
     private void copyClientDTOToClient(ClientDTO dto, Client client) {
         client.setName(dto.getName());
         client.setCpf(dto.getCpf());
